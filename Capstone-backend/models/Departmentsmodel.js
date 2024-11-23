@@ -13,8 +13,17 @@ const DepartmentsSchema = new mongoose.Schema(
       maxlength: 100,
       minlength: 10,
     },
+
+    image: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("DepartmentsModel", DepartmentsSchema, "Departments");
+module.exports = mongoose.model(
+  "DepartmentsModel",
+  DepartmentsSchema,
+  "Departments"
+);

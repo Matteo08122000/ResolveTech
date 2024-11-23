@@ -3,8 +3,27 @@ const google = express.Router();
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const jwt = require("jsonwebtoken");
-const Usersmodel = require("../models/Usersmodel");
+const session = require("express-session");
 require("dotenv").config();
+
+google.use(
+  session({
+    secret: process.env.GOOGLE_CLIENT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+google.use(passport.initialize());
+google.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
 
 passport.use(
   new GoogleStrategy(
@@ -13,61 +32,39 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await Usersmodel.findOne({ email: profile.emails[0].value });
 
-        if (!user) {
-          user = new UsersModel({
-            name: profile.displayName,
-            email: profile.emails[0].value,
-            password: null,
-            role: "user",
-            gender: "not specified",
-            dob: new Date(),
-          });
-          await user.save();
-        }
-
-        done(null, user);
-      } catch (error) {
-        done(error, null);
-      }
+    (accessToken, refreshToken, profile, done) => {
+      return done(null, profile);
     }
   )
 );
 
-google.use(passport.initialize());
-
 google.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate("google", { scope: ["email", "profile"] }),
+  (req, res) => {
+    const redirectUrl = `${
+      process.env.FRONTEND_URL
+    }/success?user=${encodeURIComponent(JSON.stringify(req.user))}`;
+    res.redirect(redirectUrl);
+  }
 );
 
 google.get(
   "/auth/google/callback",
-  passport.authenticate("google", { session: false, failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    const token = jwt.sign(
-      {
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        _id: user._id,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
+    const user = req.user;
+    const token = jwt.sign(user, process.env.JWT_SECRET);
     const redirectUrl = `${
       process.env.FRONTEND_URL
-    }/auth/success?token=${encodeURIComponent(token)}`;
+    }/success/${encodeURIComponent(token)}`;
     res.redirect(redirectUrl);
   }
 );
 
 google.get("/success", (req, res) => {
-  res.send("Login with Google completed with success!");
+  res.redirect(`${process.env.FRONTEND_URL}/home`);
 });
 
 module.exports = google;
