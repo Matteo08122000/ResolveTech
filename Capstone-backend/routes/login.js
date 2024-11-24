@@ -40,7 +40,7 @@ login.post("/login", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "15m",
+        expiresIn: "1h",
       }
     );
 
@@ -50,7 +50,10 @@ login.post("/login", async (req, res) => {
       token,
     });
   } catch (error) {
-    next(error);
+    res.status(500).send({
+      statusCode: 500,
+      message: "server error login",
+    });
   }
 });
 
