@@ -6,17 +6,22 @@ const assignTechnician = require("../middlware/assignTechnician");
 
 tickets.get("/tickets", async (req, res) => {
   try {
-    const { status, priority, department } = req.query;
+    const { status, priority, department, page = 1, limit = 10 } = req.query;
 
     const filters = {};
     if (status) filters.status = status;
     if (priority) filters.priority = priority;
     if (department) filters.department = department;
+    const skip = (page - 1) * limit;
 
     const tickets = await Ticketsmodel.find(filters)
+      .skip(skip)
+      .limit(parseInt(limit))
       .populate("createdBy", "name email")
       .populate("assignedTo", "name email")
       .populate("department", "name");
+
+    const totalTickets = await Ticketsmodel.countDocuments(filters);
 
     if (!tickets || tickets.length === 0) {
       return res.status(404).send({
@@ -24,11 +29,18 @@ tickets.get("/tickets", async (req, res) => {
         message: "Tickets not found",
       });
     }
+    const totalPages = Math.ceil(totalTickets / limit);
 
     res.status(200).send({
       statusCode: 200,
       message: "Tickets found",
       tickets,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalTickets,
+        limit: parseInt(limit),
+      },
     });
   } catch (error) {
     res.status(500).send({
