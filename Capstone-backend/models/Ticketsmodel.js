@@ -30,7 +30,7 @@ const TicketsSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UsersModel",
-      required: true,
+      required: false,
     },
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,11 +40,11 @@ const TicketsSchema = new mongoose.Schema(
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DepartmentsModel",
-      required:true,
+      required: true,
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

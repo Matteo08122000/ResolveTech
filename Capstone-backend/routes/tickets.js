@@ -3,8 +3,10 @@ const tickets = express.Router();
 const Ticketsmodel = require("../models/Ticketsmodel");
 const authorizeTicketAcess = require("../middlware/authorizeTicketAccess");
 const assignTechnician = require("../middlware/assignTechnician");
+const verifyToken = require("../middlware/VerifyToken");
+const validateTicketFields = require("../middlware/validateTicketFields");
 
-tickets.get("/tickets", async (req, res) => {
+tickets.get("/tickets", verifyToken, async (req, res) => {
   try {
     const { status, priority, department, page = 1, limit = 10 } = req.query;
 
@@ -23,12 +25,6 @@ tickets.get("/tickets", async (req, res) => {
 
     const totalTickets = await Ticketsmodel.countDocuments(filters);
 
-    if (!tickets || tickets.length === 0) {
-      return res.status(404).send({
-        statusCode: 404,
-        message: "Tickets not found",
-      });
-    }
     const totalPages = Math.ceil(totalTickets / limit);
 
     res.status(200).send({
@@ -50,58 +46,49 @@ tickets.get("/tickets", async (req, res) => {
   }
 });
 
-tickets.post("/tickets/create", async (req, res) => {
-  try {
-    const {
-      title,
-      description,
-      status,
-      priority,
-      createdBy,
-      assignedTo,
-      department,
-    } = req.body;
+tickets.post(
+  "/tickets/create",
+  verifyToken,
+  validateTicketFields,
+  assignTechnician,
+  async (req, res) => {
+    try {
+      const {
+        title,
+        description,
+        status,
+        priority,
+        createdBy,
+        assignedTo,
+        department,
+      } = req.body;
 
-    if (
-      !title ||
-      !description ||
-      !status ||
-      !priority ||
-      !createdBy ||
-      !assignedTo ||
-      !department
-    ) {
-      return res.status(400).send({
-        statusCode: 400,
-        message: "All fields are required",
+      const newTicket = await Ticketsmodel({
+        title,
+        description,
+        status,
+        priority,
+        createdBy,
+        assignedTo,
+        department,
+      });
+
+      const ticket = await newTicket.save();
+      res.status(201).send({
+        statusCode: 201,
+        message: "Ticket created successfully",
+        ticket,
+      });
+    } catch (error) {
+      res.status(500).send({
+        statusCode: 500,
+        message: "Internal server error",
       });
     }
-
-    const newTicket = await Ticketsmodel({
-      title,
-      description,
-      status,
-      priority,
-      createdBy,
-      assignedTo,
-      department,
-    });
-
-    const ticket = await newTicket.save();
-    res.status(201).send({
-      statusCode: 201,
-      message: "Ticket created successfully",
-      ticket,
-    });
-  } catch (error) {
-    res.status(500).send({
-      statusCode: 500,
-      message: "Internal server error",
-    });
   }
-});
+);
 
-tickets.get("/tickets/:ticketId", async (req, res) => {
+tickets.get("/tickets/:ticketId", verifyToken, async (req, res) => {
   try {
     const { ticketId } = req.params;
 
@@ -132,7 +119,9 @@ tickets.get("/tickets/:ticketId", async (req, res) => {
 
 tickets.patch(
   "/tickets/update/:ticketId",
+  verifyToken,
   authorizeTicketAcess,
+  validateTicketFields,
   async (req, res) => {
     try {
       const { ticketId } = req.params;
@@ -172,6 +161,7 @@ tickets.patch(
 
 tickets.delete(
   "/tickets/delete/:ticketId",
+  verifyToken,
   authorizeTicketAcess,
   async (req, res) => {
     try {
@@ -199,7 +189,7 @@ tickets.delete(
   }
 );
 
-tickets.get("/tickets/assigned-to/:userId", async (req, res) => {
+tickets.get("/tickets/assigned-to/:userId", verifyToken, async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -208,7 +198,7 @@ tickets.get("/tickets/assigned-to/:userId", async (req, res) => {
       .populate("assignedTo", "name email")
       .populate("department", "name");
 
-    if (!tickets || tickets.lenght === 0) {
+    if (tickets.length === 0) {
       return res.status(404).send({
         statusCode: 404,
         message: "Tickets not found",
@@ -230,8 +220,48 @@ tickets.get("/tickets/assigned-to/:userId", async (req, res) => {
 
 tickets.patch(
   "/tickets/update/assign/:ticketId",
+  verifyToken,
   authorizeTicketAcess,
-  assignTechnician
+  assignTechnician,
+  async (req, res) => {
+    try {
+      const { ticketId } = req.params;
+      const { assignedTo } = req.body;
+      if (!assignedTo) {
+        return res.status(400).send({
+          statusCode: 400,
+          message: "Assigned technician is required",
+        });
+      }
+
+      const updatedTicket = await Ticketsmodel.findByIdAndUpdate(
+        ticketId,
+        { assignedTo },
+        { new: true }
+      )
+        .populate("createdBy", "name email")
+        .populate("assignedTo", "name email")
+        .populate("department", "name");
+
+      if (!updatedTicket) {
+        return res.status(404).send({
+          statusCode: 404,
+          message: "Ticket not found",
+        });
+      }
+
+      res.status(200).send({
+        statusCode: 200,
+        message: "Technician assigned successfully",
+        updatedTicket,
+      });
+    } catch (error) {
+      res.status(500).send({
+        statusCode: 500,
+        message: "Internal server error",
+      });
+    }
+  }
 );
 
 module.exports = tickets;

@@ -19,7 +19,7 @@ const cloudStorage = new CloudinaryStorage({
 
 const cloud = multer({ storage: cloudStorage,
     limits:{fileSize: 10 * 1024 * 1024},
-    fileFilter: (req,res, cb) => {
+    fileFilter: (req, res, cb) => {
         const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
         if(allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
