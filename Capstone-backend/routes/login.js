@@ -18,7 +18,7 @@ login.post("/login", async (req, res) => {
     if (!user) {
       return res.status(400).send({
         statusCode: 400,
-        message: "User not Found",
+        message: "Invalid email or password",
       });
     }
 
@@ -32,10 +32,7 @@ login.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       {
-        email: user.email,
-        name: user.name,
         role: user.role,
-        dob: user.dob,
         _id: user._id,
       },
       process.env.JWT_SECRET,

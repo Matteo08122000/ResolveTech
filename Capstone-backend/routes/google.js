@@ -67,4 +67,27 @@ google.get("/success", (req, res) => {
   res.redirect(`${process.env.FRONTEND_URL}/home`);
 });
 
+google.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).send({
+        statusCode: 500,
+        message: "Oops, something went wrong during logout",
+        err,
+      });
+    }
+
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).send({
+          statusCode: 500,
+          message: "Failed to destroy session",
+          err,
+        });
+      }
+      res.redirect("/");
+    });
+  });
+});
+
 module.exports = google;

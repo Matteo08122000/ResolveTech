@@ -6,12 +6,16 @@ const validateUserId = require("../middlware/validateUserId");
 const authorizeAdmin = require("../middlware/authorizeAdmin");
 const assignTechnician = require("../middlware/assignTechnician");
 const ValidateLog = require("../middlware/ValidateLogs");
-
+const VerifyToken = require("../middlware/VerifyToken");
+const authorizeLogAccess = require("../middlware/authorizeLogAccess");
+const authorizeLogCreate = require("../middlware/AuthorizeLogCreate");
 
 Logs.post(
   "/logs/create/:userId",
+  VerifyToken,
   validateUserId,
   ValidateLog,
+  authorizeLogAccess,
   async (req, res) => {
     try {
       const { ticket, action } = req.body;
@@ -64,9 +68,9 @@ Logs.post(
   }
 );
 
-Logs.get("/logs/:userId", validateUserId, async (req, res) => {
+Logs.get("/logs/:userId", VerifyToken, validateUserId, async (req, res) => {
   try {
-    const{userId} = req.params;
+    const { userId } = req.params;
     const { page = 1, limit = 10 } = req.query;
     const logs = await Logsmodel.find({ createdBy: userId })
       .populate("ticket")
@@ -94,8 +98,11 @@ Logs.get("/logs/:userId", validateUserId, async (req, res) => {
 
 Logs.get(
   "/logs/:userId/:logId",
+  VerifyToken,
   validateUserId,
   assignTechnician,
+  authorizeLogAccess,
+
   async (req, res) => {
     try {
       const { logId, userId } = req.params;
@@ -131,8 +138,10 @@ Logs.get(
 
 Logs.patch(
   "/logs/update/:userId/:logId",
+  VerifyToken,
   validateUserId,
   authorizeAdmin,
+  authorizeLogCreate,
   async (req, res) => {
     try {
       const { logId, userId } = req.params;
@@ -181,8 +190,10 @@ Logs.patch(
 
 Logs.delete(
   "/logs/delete/:userId/:logId",
+  VerifyToken,
   validateUserId,
   authorizeAdmin,
+  authorizeLogCreate,
   async (req, res) => {
     try {
       const { logId, userId } = req.params;

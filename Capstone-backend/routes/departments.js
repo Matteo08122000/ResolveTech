@@ -5,8 +5,12 @@ const Departmentsmodel = require("../models/Departmentsmodel");
 const validateUserId = require("../middlware/validateUserId");
 const authorizeAdmin = require("../middlware/authorizeAdmin");
 const assignTechnician = require("../middlware/assignTechnician");
+const VerifyToken = require("../middlware/VerifyToken");
+const validateDepartmentFields = require("../middlware/validateDepartmentFields");
 
-departments.get("/departments", validateUserId, async (req, res) => {
+
+
+departments.get("/departments", VerifyToken, validateUserId, async (req, res) => {
   try {
     const departments = await Departmentsmodel.find();
     res.status(200).send({
@@ -24,7 +28,9 @@ departments.get("/departments", validateUserId, async (req, res) => {
 
 departments.post(
   "/departments/create",
+  VerifyToken,
   authorizeAdmin,
+  validateDepartmentFields,
   cloud.single("image"),
   async (req, res) => {
     try {
@@ -58,7 +64,7 @@ departments.post(
   }
 );
 
-departments.get("/departments/:departmentId", async (req, res) => {
+departments.get("/departments/:departmentId", VerifyToken, async (req, res) => {
   try {
     const { departmentId } = req.params;
 
@@ -72,7 +78,7 @@ departments.get("/departments/:departmentId", async (req, res) => {
     }
 
     res.status(200).send({
-      stautsCode: 200,
+      statusCode: 200,
       message: "Department found",
       department,
     });
@@ -86,7 +92,9 @@ departments.get("/departments/:departmentId", async (req, res) => {
 
 departments.patch(
   "/departments/update/:departmentId",
+  VerifyToken,
   assignTechnician,
+  validateDepartmentFields,
   async (req, res) => {
     try {
       const { departmentId } = req.params;
@@ -121,7 +129,7 @@ departments.patch(
   }
 );
 
-departments.delete("/departments/delete/:departmentId", async (req, res) => {
+departments.delete("/departments/delete/:departmentId", VerifyToken, async (req, res) => {
   try {
     const { departmentId } = req.params;
 
@@ -142,7 +150,7 @@ departments.delete("/departments/delete/:departmentId", async (req, res) => {
       deleteDepartment,
     });
   } catch (error) {
-    res.stauts(500).send({
+    res.status(500).send({
       statusCode: 500,
       message: "Internal server error",
     });
