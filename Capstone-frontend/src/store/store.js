@@ -11,7 +11,7 @@ const store = configureStore({
     tickets: ticketsReducer,
     logs: logsReducer,
     users: usersReducer,
-    toggleTheme: toggleTheme,
+    theme: toggleTheme,
   },
 });
 
