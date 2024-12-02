@@ -31,13 +31,13 @@ users.get("/users", authorizeAdmin, async (req, res) => {
   }
 });
 
-users.post("/users/create", authorizeAdmin, async (req, res, next) => {
-  const { name, email, password, gender, dob, role } = req.body;
+users.post("/users/create", async (req, res, next) => {
+  const { name, email, password, gender, dob } = req.body;
 
-  if (!name || !email || !password || !gender || !dob || !role) {
+  if (!name || !email || !password) {
     return res.status(400).send({
       statusCode: 400,
-      message: "All fields are required",
+      message: "Name, email, and password are required",
     });
   }
 
@@ -52,17 +52,17 @@ users.post("/users/create", authorizeAdmin, async (req, res, next) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  const Newuser = new Usersmodel({
+  const newUser = new Usersmodel({
     name: name,
     email: email,
     password: hashedPassword,
-    gender: gender,
-    dob: dob,
-    role: role,
+    gender: gender || "not specified",
+    dob: dob || null,
+    role: "user", 
   });
 
   try {
-    const user = await Newuser.save();
+    const user = await newUser.save();
     res.status(201).send({
       statusCode: 201,
       message: "User created successfully",

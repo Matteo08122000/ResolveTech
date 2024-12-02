@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../store/slice/themeSilce";
-import { logout } from "../../store/slice/authSlice";
 import logo from "../../../src/assets/logo.png";
 import clsx from "clsx";
 
@@ -19,24 +19,19 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/logout`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${import.meta.env.FRONTEND_URL}/logout`, {
+        method: "GET",
+      });
 
       if (response.ok) {
-        dispatch(logout());
-        navigate("/");
+        window.location.href = "/";
       } else {
-        console.error("Logout error");
-        alert("Logout error. Please try again later.");
+        console.error("Errore nel logout");
+        alert("Errore nel logout. Riprova più tardi.");
       }
     } catch (error) {
-      console.error("Network error:", error);
-      alert("Network error. Please try again later.");
+      console.error("Errore di rete:", error);
+      alert("Errore di rete. Riprova più tardi.");
     }
   };
 
@@ -58,19 +53,28 @@ const Navbar = () => {
         </div>
 
         <ul className="hidden md:flex list-none items-center gap-10 ml-10">
-          {["Blogs", "Services", "Contact", "About"].map((item, index) => (
+          {[
+            { name: "Blogs", to: "blogs" },
+            { name: "Services", to: "services" },
+            { name: "Contact", to: "contacts" },
+            { name: "About", to: "about" },
+          ].map((item, index) => (
             <li key={index}>
-              <Link
-                to={`/${item.toLowerCase()}`}
+              <ScrollLink
+                to={item.to}
+                smooth={true}
+                duration={500}
+                spy={true}
+                offset={-110}
                 className={clsx(
-                  "relative font-bold uppercase text-sm transition",
+                  "relative font-bold uppercase text-sm transition cursor-pointer",
                   theme === "light"
                     ? "text-white hover:text-black"
                     : "text-white hover:text-purple-400"
                 )}
               >
-                {item}
-              </Link>
+                {item.name}
+              </ScrollLink>
             </li>
           ))}
         </ul>
@@ -135,17 +139,22 @@ const Navbar = () => {
               >
                 <span>{user?.name}</span>
                 <svg
-                  className="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+                  strokeWidth="1.5"
+                  className="w-7 h-7"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9l3 3m0 0l-3 3m3-3H8.25"
                   />
                 </svg>
               </button>
@@ -225,10 +234,28 @@ const Navbar = () => {
               </button>
             ) : (
               <button
-                className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600"
+                className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center space-x-2"
                 onClick={handleLogout}
               >
-                Logout
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9l3 3m0 0l-3 3m3-3H8.25"
+                  />
+                </svg>
               </button>
             )}
           </div>

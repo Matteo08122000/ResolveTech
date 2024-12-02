@@ -72,7 +72,7 @@ const Hero = () => {
             problema Tecnologico
           </span>
         </h1>
-        <p className="text-lg md:text-2xl leading-relaxed">
+        <p className="text-lg md:text-2xl leading-relaxed py-6">
           Offriamo una gamma completa di soluzioni tecnologiche per ogni
           esigenza: riparazioni hardware e software, creazione di siti web,
           assistenza per reti e sicurezza informatica, e molto altro!
@@ -80,6 +80,7 @@ const Hero = () => {
       </div>
 
       <div
+        id="services"
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center mt-16 px-4"
         data-aos="zoom-in"
       >
@@ -104,6 +105,22 @@ const Hero = () => {
         ))}
       </div>
 
+      <div id="blogs" className="mt-20 px-4" data-aos="fade-up">
+        <h2 className="text-3xl font-bold text-center">Blog</h2>
+        <div className="max-w-4xl mx-auto mt-4">
+          <p className="text-lg leading-relaxed text-center">
+            L’Innovazione Tecnologica al Servizio della Comunità. La tecnologia
+            non è mai stata così importante come oggi. Le aziende, i
+            professionisti e i singoli individui dipendono da soluzioni
+            innovative per semplificare la vita quotidiana, ottimizzare i
+            processi e risolvere problemi complessi. Noi, come azienda, siamo
+            fieri di trovarci al centro di questo cambiamento, spingendo
+            costantemente i confini di ciò che è possibile con la tecnologia
+            moderna. Benvenuti nel Futuro!
+          </p>
+        </div>
+      </div>
+
       <div className="mt-20 text-center" data-aos="fade-left">
         <h2 className="text-2xl font-bold">Perché sceglierci?</h2>
         <ul className="list-none mt-6 space-y-4 text-lg">
@@ -119,25 +136,103 @@ const Hero = () => {
         </ul>
       </div>
 
-      <div className="mt-20 mb-20" data-aos="fade-up">
-        <h2 className="text-2xl font-bold text-center">Domande frequenti</h2>
-        <div className="space-y-4 mt-6">
-          <details className="border border-gray-300 rounded-lg p-4">
-            <summary className="font-medium">
-              Quali tipi di dispositivi riparate?
-            </summary>
-            <p className="mt-2">
-              Ripariamo laptop, desktop, tablet, smartphone e molto altro.
-            </p>
-          </details>
-          <details className="border border-gray-300 rounded-lg p-4">
-            <summary className="font-medium">
-              Fornite assistenza da remoto?
-            </summary>
-            <p className="mt-2">
-              Sì, possiamo fornire supporto tecnico anche da remoto.
-            </p>
-          </details>
+      <div id="about" className="mt-20 mb-10 px-4" data-aos="fade-up">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center">Domande frequenti</h2>
+          <div className="space-y-4 mt-6">
+            <details className="border border-gray-300 rounded-lg p-4">
+              <summary className="font-medium">
+                Quali tipi di dispositivi riparate?
+              </summary>
+              <p className="mt-2">
+                Ripariamo laptop, desktop, tablet, smartphone e molto altro.
+              </p>
+            </details>
+            <details className="border border-gray-300 rounded-lg p-4">
+              <summary className="font-medium">
+                Fornite assistenza da remoto?
+              </summary>
+              <p className="mt-2">
+                Sì, possiamo fornire supporto tecnico anche da remoto.
+              </p>
+            </details>
+            <details className="border border-gray-300 rounded-lg p-4">
+              <summary className="font-medium">
+                Come posso creare un ticket?
+              </summary>
+              <p className="mt-2">
+                Per creare un ticket, visita la nostra pagina dedicata al
+                supporto sul sito ufficiale. Compila il modulo con i dettagli
+                del tuo problema, incluso il tipo di dispositivo e una
+                descrizione del problema. Una volta inviato, il nostro team ti
+                contatterà per ulteriori dettagli o per avviare la procedura di
+                assistenza.
+              </p>
+            </details>
+            <details className="border border-gray-300 rounded-lg p-4">
+              <summary className="font-medium">
+                Quanto tempo richiedono le riparazioni?
+              </summary>
+              <p className="mt-2">
+                I tempi di riparazione dipendono dalla complessità del problema
+                e dalla disponibilità dei pezzi di ricambio. Solitamente, le
+                riparazioni vengono completate entro 3-5 giorni lavorativi.
+              </p>
+            </details>
+            <details className="border border-gray-300 rounded-lg p-4">
+              <summary className="font-medium">
+                Offrite garanzie sulle riparazioni?
+              </summary>
+              <p className="mt-2">
+                Sì, tutte le nostre riparazioni sono coperte da una garanzia di
+                90 giorni. Se il problema persiste, lo risolveremo gratuitamente
+                durante questo periodo.
+              </p>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="contacts"
+        className="mt-20 p-8 bg-gray-100 rounded-lg shadow-lg mb-20"
+        data-aos="fade-up"
+      >
+        <h2 className="text-3xl font-bold text-center text-gray-800">
+          Contattaci
+        </h2>
+        <p className="mt-4 text-lg text-center text-gray-600">
+          Hai domande o hai bisogno di supporto? Siamo qui per aiutarti!
+        </p>
+
+        <div className="flex flex-col sm:flex-row justify-center mt-8  gap-6">
+          <div className="flex items-center gap-4">
+            <i className="fas fa-envelope text-2xl text-blue-500"></i>
+            <a
+              href="mailto:support@example.com"
+              className="text-lg font-medium text-gray-700 hover:text-blue-500"
+            >
+              supportinfo@gmail.com
+            </a>
+          </div>
+          <div className="flex items-center gap-4">
+            <i className="fas fa-phone text-2xl text-purple-500"></i>
+            <a
+              href="tel:+123456789"
+              className="text-lg font-medium text-gray-700 hover:text-purple-500"
+            >
+              +1 234 567 89
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-10 text-center">
+          <button className="px-6 py-3 text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700">
+            Scrivici
+          </button>
+          <button className="ml-4 px-6 py-3 text-purple-600 bg-white border border-purple-600 rounded-lg shadow-md hover:bg-purple-50">
+            Chiama ora
+          </button>
         </div>
       </div>
 

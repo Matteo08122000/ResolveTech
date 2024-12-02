@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 const allowedGenders = ["male", "female", "not specified"];
 
 const UsersSchema = new mongoose.Schema(
@@ -16,10 +16,10 @@ const UsersSchema = new mongoose.Schema(
       match: [/.+@.+\..+/, "Please enter a valid email"],
     },
 
-    password:{
-      type:String,
-      required:true,
-      minlength:6,
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
     },
 
     gender: {

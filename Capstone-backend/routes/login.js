@@ -41,11 +41,20 @@ login.post("/login", async (req, res) => {
       }
     );
 
-    res.header("authorization", `Bearer ${token}`).status(200).send({
-      statusCode: 200,
-      message: "Login successful",
-      token,
-    });
+    res
+      .header("authorization", `Bearer ${token}`)
+      .status(200)
+      .send({
+        statusCode: 200,
+        message: "Login successful",
+        token,
+        user: {
+          _id: user._id,
+          email: user.email,
+          role: user.role,
+          name: user.name,
+        },
+      });
   } catch (error) {
     res.status(500).send({
       statusCode: 500,

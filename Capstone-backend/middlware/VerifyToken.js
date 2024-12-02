@@ -1,13 +1,18 @@
-const jwt = require("jsonwebtoken");
-
 module.exports = (req, res, next) => {
-  const token = req.header("authorization")?.replace("Bearer ", "");
+  const openRoutes = ["/login", "/logout", "/register", "/users/create"];
+  if (openRoutes.includes(req.path)) {
+    return next();
+  }
+
+  const authHeader = req.header("authorization");
+  const token = authHeader?.replace("Bearer ", "");
   if (!token) {
     return res.status(401).send({
       statusCode: 401,
-      message: "token not valid",
+      message: "Token not valid",
     });
   }
+
   try {
     const verify = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verify;
@@ -15,7 +20,7 @@ module.exports = (req, res, next) => {
   } catch (error) {
     return res.status(403).send({
       statusCode: 403,
-      message: "token not valid",
+      message: "Token not valid",
     });
   }
 };
