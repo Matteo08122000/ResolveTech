@@ -8,12 +8,21 @@ const validateTicketFields = require("../middlware/validateTicketFields");
 
 tickets.get("/tickets", verifyToken, async (req, res) => {
   try {
-    const { status, priority, department, page = 1, limit = 10 } = req.query;
+    const {
+      status,
+      priority,
+      department,
+      title,
+      page = 1,
+      limit = 10,
+    } = req.query;
 
     const filters = {};
     if (status) filters.status = status;
     if (priority) filters.priority = priority;
     if (department) filters.department = department;
+    if (title) filters.title = { $regex: title, $options: "i" }; 
+
     const skip = (page - 1) * limit;
 
     const tickets = await Ticketsmodel.find(filters)
@@ -25,15 +34,13 @@ tickets.get("/tickets", verifyToken, async (req, res) => {
 
     const totalTickets = await Ticketsmodel.countDocuments(filters);
 
-    const totalPages = Math.ceil(totalTickets / limit);
-
     res.status(200).send({
       statusCode: 200,
       message: "Tickets found",
       tickets,
       pagination: {
         currentPage: parseInt(page),
-        totalPages,
+        totalPages: Math.ceil(totalTickets / limit),
         totalTickets,
         limit: parseInt(limit),
       },

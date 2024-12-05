@@ -9,7 +9,7 @@ const Footer = () => {
     <footer
       className={clsx(
         "p-2 shadow-md",
-        theme === "light" ? "bg-purple-600 text-white" : "bg-black text-white"
+        theme === "light" ? "bg-purple-900 text-white" : "bg-black text-white"
       )}
     >
       <div className="container mx-auto px-4">

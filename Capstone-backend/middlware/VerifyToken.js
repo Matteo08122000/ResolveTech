@@ -1,5 +1,8 @@
+const jwt = require("jsonwebtoken");
+
 module.exports = (req, res, next) => {
   const openRoutes = ["/login", "/logout", "/register", "/users/create"];
+
   if (openRoutes.includes(req.path)) {
     return next();
   }
@@ -20,7 +23,8 @@ module.exports = (req, res, next) => {
   } catch (error) {
     return res.status(403).send({
       statusCode: 403,
-      message: "Token not valid",
+      message:
+        error.message === "jwt expired" ? "Token expired" : "Token not valid",
     });
   }
 };
