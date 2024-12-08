@@ -38,7 +38,7 @@ const Sidebar = () => {
     <div
       className={`h-screen transition-all rounded-r-xl shadow-lg ${
         theme === "light" ? "bg-purple-900 text-white" : "bg-black text-white"
-      } ${collapsed ? "w-16" : "w-64"} flex flex-col`}
+      } ${collapsed ? "w-16" : "w-64"} flex flex-col overflow-y-auto`}
     >
       <div className="flex items-center justify-between p-4">
         {!collapsed && <h1 className="text-lg font-bold">ResolveTech</h1>}
@@ -50,7 +50,7 @@ const Sidebar = () => {
         </button>
       </div>
 
-      <nav className="mt-6 flex flex-col space-y-2">
+      <nav className="mt-4 flex flex-col space-y-2 md:space-y-0 lg:space-y-2">
         <Link
           to="/dashboard"
           className="flex items-center gap-4 p-4 hover:bg-gray-800 rounded-lg"
@@ -101,8 +101,8 @@ const Sidebar = () => {
           {!collapsed && <span>Settings</span>}
         </Link>
       </nav>
-      <div className="border mt-auto border-white"></div>
-      <div className="mt-auto p-4">
+      <div className="border  border-white"></div>
+      <div className=" p-4">
         <div className="flex items-center">
           {isAuthenticated && (
             <button
@@ -114,7 +114,9 @@ const Sidebar = () => {
           )}
         </div>
         {!collapsed && (
-          <p className="text-sm text-white-400 mt-auto ">© 2024 ResolveTech</p>
+          <p className="text-sm text-white-400  mt-5 md:mt-3 lg:mt-5 ">
+            © 2024 ResolveTech
+          </p>
         )}
       </div>
     </div>

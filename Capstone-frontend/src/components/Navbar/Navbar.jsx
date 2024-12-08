@@ -144,6 +144,52 @@ const Navbar = () => {
             >
               {theme === "light" ? "🌙" : "🌞"}
             </button>
+
+            {!isAuthenticated && (
+              <button
+                className="flex items-center space-x-2"
+                onClick={() => navigate("/login")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  className="w-8 h-8"
+                >
+                  <circle
+                    cx="12"
+                    cy="8"
+                    r="4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <animate
+                      attributeName="r"
+                      values="4;4.5;4"
+                      dur="1s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 20c0-4 4-6 8-6s8 2 8 6"
+                  >
+                    <animate
+                      attributeName="d"
+                      dur="1.5s"
+                      repeatCount="indefinite"
+                      values="M4 20c0-4 4-6 8-6s8 2 8 6; M4 20c0-4.2 4-6.2 8-6.2s8 2.2 8 6.2; M4 20c0-4 4-6 8-6s8 2 8 6"
+                    />
+                  </path>
+                </svg>
+              </button>
+            )}
           </div>
         )}
       </div>

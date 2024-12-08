@@ -9,7 +9,7 @@ const departmentsRoute = require("./routes/departments");
 const commentsRoute = require("./routes/comments");
 const logsRoute = require("./routes/logs");
 const loginRoute = require("./routes/login");
-const logoutRoute = require("./routes/logoutAuth")
+const logoutRoute = require("./routes/logoutAuth");
 const googleRoute = require("./routes/google");
 
 const PORT = 5050;
@@ -17,10 +17,12 @@ const PORT = 5050;
 const server = express();
 
 server.use(express.json());
-server.use(cors({
+server.use(
+  cors({
     origin: "http://localhost:5173",
     credentials: true,
-  }));
+  })
+);
 
 server.use("/", usersRoute);
 server.use("/", ticketsRoute);

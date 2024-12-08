@@ -1,6 +1,6 @@
 const express = require("express");
 const tickets = express.Router();
-const Ticketsmodel = require("../models/Ticketsmodel");
+const Ticketsmodel = require("../models/ticketsmodel");
 const authorizeTicketAcess = require("../middlware/authorizeTicketAccess");
 const assignTechnician = require("../middlware/assignTechnician");
 const verifyToken = require("../middlware/VerifyToken");
@@ -18,19 +18,28 @@ tickets.get("/tickets", verifyToken, async (req, res) => {
     } = req.query;
 
     const filters = {};
-    if (status) filters.status = status;
-    if (priority) filters.priority = priority;
+    if (status) filters.status = { $regex: status, $options: "i" };
+    if (priority) filters.priority = { $regex: priority, $options: "i" };
     if (department) filters.department = department;
-    if (title) filters.title = { $regex: title, $options: "i" }; 
+    if (title) filters.title = { $regex: title, $options: "i" };
 
     const skip = (page - 1) * limit;
+
+    console.log("Filters applied:", filters);
 
     const tickets = await Ticketsmodel.find(filters)
       .skip(skip)
       .limit(parseInt(limit))
       .populate("createdBy", "name email")
       .populate("assignedTo", "name email")
-      .populate("department", "name");
+      .populate("department", "name")
+      .exec()
+      .catch((err) => {
+        console.error("Error populating data:", err.message);
+        return [];
+      });
+
+    console.log("Tickets fetched:", tickets);
 
     const totalTickets = await Ticketsmodel.countDocuments(filters);
 
@@ -46,6 +55,7 @@ tickets.get("/tickets", verifyToken, async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Error fetching tickets:", error);
     res.status(500).send({
       statusCode: 500,
       message: "Internal server error",
@@ -57,7 +67,6 @@ tickets.post(
   "/tickets/create",
   verifyToken,
   validateTicketFields,
-  assignTechnician,
   async (req, res) => {
     try {
       const {
@@ -94,29 +103,41 @@ tickets.post(
     }
   }
 );
-
-tickets.get("/tickets/:ticketId", verifyToken, async (req, res) => {
+tickets.get("/tickets/assigned-to/:userId", verifyToken, async (req, res) => {
   try {
-    const { ticketId } = req.params;
+    const { userId } = req.params;
+    console.log("User ID:", userId);
 
-    const ticket = await Ticketsmodel.findById(ticketId)
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      console.log("Invalid User ID:", userId);
+      return res.status(400).send({
+        statusCode: 400,
+        message: "Invalid User ID",
+      });
+    }
+
+    const tickets = await Ticketsmodel.find({ assignedTo: userId })
       .populate("createdBy", "name email")
       .populate("assignedTo", "name email")
       .populate("department", "name");
 
-    if (!ticket) {
+    console.log("Tickets found:", tickets);
+
+    if (tickets.length === 0) {
+      console.log("No tickets found for User ID:", userId);
       return res.status(404).send({
         statusCode: 404,
-        message: "Ticket not found",
+        message: "No tickets found for this user.",
       });
     }
 
     res.status(200).send({
       statusCode: 200,
-      message: "Ticket found",
-      ticket,
+      message: "Tickets retrieved successfully",
+      tickets,
     });
   } catch (error) {
+    console.error("Error fetching tickets:", error);
     res.status(500).send({
       statusCode: 500,
       message: "Internal server error",

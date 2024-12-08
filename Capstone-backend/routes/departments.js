@@ -10,7 +10,7 @@ const validateDepartmentFields = require("../middlware/validateDepartmentFields"
 
 
 
-departments.get("/departments", VerifyToken, validateUserId, async (req, res) => {
+departments.get("/departments", VerifyToken,  async (req, res) => {
   try {
     const departments = await Departmentsmodel.find();
     res.status(200).send({

@@ -21,6 +21,7 @@ const TicketsSchema = new mongoose.Schema(
       default: "Open",
       index: true,
     },
+
     priority: {
       type: String,
       required: true,
@@ -40,7 +41,7 @@ const TicketsSchema = new mongoose.Schema(
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DepartmentsModel",
-      required: true,
+      required: false,
     },
   },
   {
@@ -48,4 +49,6 @@ const TicketsSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("TicketsModel", TicketsSchema, "Tickets");
+module.exports =
+  mongoose.models.TicketsModel ||
+  mongoose.model("TicketsModel", TicketsSchema, "Tickets");

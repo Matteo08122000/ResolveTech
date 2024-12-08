@@ -1,7 +1,7 @@
-const Ticketsmodel = require("../models/Ticketsmodel");
+const Ticketsmodel = require("../models/ticketsmodel");
 
 const authorizeTicketAcess = async (req, res, next) => {
-  const {ticketId} = req.params;
+  const { ticketId } = req.params;
   try {
     const ticket = await Ticketsmodel.findById(ticketId);
     if (!ticket) {
@@ -13,25 +13,21 @@ const authorizeTicketAcess = async (req, res, next) => {
 
     const userRole = req.user.role;
 
-    if(userRole === "admin" || userRole === "technician") {
+    if (userRole === "admin" || userRole === "technician") {
       req.ticket = ticket;
       return next();
     }
-    
-    return res.status(403)
-    .send({
-      statusCode: 403,
-      message: "Access denied. Invalid role"
-    });
 
+    return res.status(403).send({
+      statusCode: 403,
+      message: "Access denied. Invalid role",
+    });
   } catch (error) {
-    
-res.status(500)
-.send({
-  statusCode: 500,
-  message: "An error occurred while validating ticket access"
-});
+    res.status(500).send({
+      statusCode: 500,
+      message: "An error occurred while validating ticket access",
+    });
   }
 };
 
-module.exports = authorizeTicketAcess
+module.exports = authorizeTicketAcess;

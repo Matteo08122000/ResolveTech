@@ -60,39 +60,19 @@ const Header = () => {
           ResolveTech
         </div>
         <div
-          className="pl-4 text-1xl font-medium text-purple-600 hidden md:block"
+          className="pl-4 text-1xl flex items-center font-medium text-purple-600 hidden md:block"
           style={{ fontFamily: "'Poppins', sans-serif" }}
         >
           Benvenuto, {user?.name || "Utente"}!
         </div>
       </div>
 
-      <div className="flex items-center gap-4 md:hidden">
-        <FaBell className="text-gray-500" />
-        <button
-          className="p-2 rounded-full hover:opacity-80 transition"
-          onClick={handleToggleTheme}
-        >
-          {theme === "light" ? "🌙" : "🌞"}
-        </button>
-      </div>
-
-      <div className="hidden md:flex items-center gap-4">
-        <div className="flex items-center gap-2 w-80">
-          <FaSearch className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className={`p-2 border rounded-lg outline-purple-900 w-full ${
-              theme === "light" ? "bg-white" : "bg-gray-700 text-white"
-            }`}
-          />
-        </div>
-        <FaBell className="text-gray-500" />
+      <div className="flex items-center gap-4">
+        <FaBell className="text-gray-500 md:block" />
         <img
           src={userImage || "https://via.placeholder.com/40"}
           alt="Profile"
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full hidden md:block"
         />
         <button
           className="p-2 rounded-full hover:opacity-80 transition"
@@ -102,6 +82,7 @@ const Header = () => {
         </button>
       </div>
 
+      {/* Mobile Menu */}
       {menuOpen && (
         <div
           className={`absolute top-16 left-0 w-full p-4 bg-gray-800 text-white flex flex-col gap-4 md:hidden`}

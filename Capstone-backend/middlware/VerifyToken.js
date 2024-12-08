@@ -9,16 +9,17 @@ module.exports = (req, res, next) => {
 
   const authHeader = req.header("authorization");
   const token = authHeader?.replace("Bearer ", "");
+
   if (!token) {
     return res.status(401).send({
       statusCode: 401,
-      message: "Token not valid",
+      message: "Token not provided",
     });
   }
 
   try {
-    const verify = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verify;
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
     next();
   } catch (error) {
     return res.status(403).send({
