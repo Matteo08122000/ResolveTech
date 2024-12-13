@@ -38,11 +38,10 @@ Backend: Nella cartella Capstone-backend.
 
 # Clona il repository sul tuo computer
 
-$ git clone https://github.com/tuo-username/ticketing-system.git
-
+$ git clone https://github.com/Matteo08122000/TechResolve/branches
 # Accedi alla directory del progetto
 
-$ cd ticketing-system
+$ cd TechResolve
 
 2. Configura il Backend
 
