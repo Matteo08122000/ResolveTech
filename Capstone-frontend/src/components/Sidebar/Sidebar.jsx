@@ -3,9 +3,7 @@ import {
   FaHome,
   FaTicketAlt,
   FaUserFriends,
-  FaCog,
   FaComments,
-  FaMapMarkerAlt,
   FaSignOutAlt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -18,11 +16,21 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(`${import.meta.env.FRONTEND_URL}/logout`, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/logout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.ok) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+
         window.location.href = "/";
       } else {
         console.error("Errore nel logout");
@@ -50,7 +58,7 @@ const Sidebar = () => {
         </button>
       </div>
 
-      <nav className="mt-4 flex flex-col space-y-2 md:space-y-0 lg:space-y-2">
+      <nav className="mt-4 flex flex-col space-y-4 md:space-y-0 lg:space-y-2">
         <Link
           to="/dashboard"
           className="flex items-center gap-4 p-4 hover:bg-gray-800 rounded-lg"
@@ -80,33 +88,19 @@ const Sidebar = () => {
           {!collapsed && <span>Departments</span>}
         </Link>
         <Link
-          to="/logs"
+          to="/email"
           className="flex items-center gap-4 p-4 hover:bg-gray-800 rounded-lg"
         >
           <FaComments size={20} />
-          {!collapsed && <span>Logs & Comments</span>}
-        </Link>
-        <Link
-          to="/map"
-          className="flex items-center gap-4 p-4 hover:bg-gray-800 rounded-lg"
-        >
-          <FaMapMarkerAlt size={20} />
-          {!collapsed && <span>Live Map</span>}
-        </Link>
-        <Link
-          to="/settings"
-          className="flex items-center gap-4 p-4 hover:bg-gray-800 rounded-lg"
-        >
-          <FaCog size={20} />
-          {!collapsed && <span>Settings</span>}
+          {!collapsed && <span>Email</span>}
         </Link>
       </nav>
-      <div className="border  border-white"></div>
+      <div className="border  border-white mt-5"></div>
       <div className=" p-4">
         <div className="flex items-center">
           {isAuthenticated && (
             <button
-              className="p-auto  rounded-full hover:opacity-80 transition bg-gray-700 text-white"
+              className="p-auto  rounded-full hover:opacity-80 transition bg-gray-700 text-white mt-2"
               onClick={handleLogout}
             >
               <FaSignOutAlt size={20} />
@@ -114,9 +108,7 @@ const Sidebar = () => {
           )}
         </div>
         {!collapsed && (
-          <p className="text-sm text-white-400  mt-5 md:mt-3 lg:mt-5 ">
-            © 2024 ResolveTech
-          </p>
+          <p className="text-sm text-white-400  mt-5  ">© 2024 ResolveTech</p>
         )}
       </div>
     </div>

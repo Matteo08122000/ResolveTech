@@ -76,7 +76,7 @@ const TicketsPieChart = () => {
               title: { display: true, text: "Ticket Priority Distribution" },
               datalabels: {
                 color: "#fff",
-                formatter: (value, context) => {
+                formatter: (value) => {
                   const percentage = ((value / totalTickets) * 100).toFixed(2);
                   return `${percentage}%`;
                 },

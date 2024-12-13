@@ -1,7 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const openRoutes = ["/login", "/logout", "/register", "/users/create"];
+  const openRoutes = [
+    "/login",
+    "/logout",
+    "/register",
+    "/users/create",
+    "/auth/google",
+    "/auth/google/callback",
+  ];
 
   if (openRoutes.includes(req.path)) {
     return next();

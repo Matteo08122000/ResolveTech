@@ -15,7 +15,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-semibold mb-4">About Us</h3>
+            <h3 className="text-xl font-semibold mb-4">Su di noi</h3>
             <p className="text-sm">
               Offriamo soluzioni di alto livello per problemi tecnologici, dalle
               riparazioni hardware alla sicurezza informatica.
@@ -23,7 +23,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-xl font-semibold mb-4">Collegamenti rapidi</h3>
             <ul className="space-y-2">
               <li>
                 <a href="#" className="hover:underline">
@@ -32,24 +32,24 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#" className="hover:underline">
-                  Services
+                  Servizi
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:underline">
-                  Contact Us
+                  Contatti
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:underline">
-                  Privacy Policy
+                  Politica sulla riservatezza
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
+            <h3 className="text-xl font-semibold mb-4">Seguici</h3>
             <div className="flex space-x-4">
               <a
                 href="https://www.facebook.com/login.php/"

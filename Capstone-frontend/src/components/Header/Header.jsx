@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaBell, FaBars, FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../store/slice/themeSilce";
 import logo from "../../assets/logo.png";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { theme } = useSelector((state) => state.theme);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useSelector((state) => state.auth);
   const [userImage, setUserImage] = useState("");
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const fetchRandomImage = async () => {
@@ -46,29 +52,22 @@ const Header = () => {
         <button
           className="md:hidden ml-4 p-2 rounded-full"
           onClick={toggleMenu}
-        >
-          {menuOpen ? (
-            <FaTimes size={20} className="text-gray-500" />
-          ) : (
-            <FaBars size={20} className="text-gray-500" />
-          )}
-        </button>
+        ></button>
       </div>
 
       <div className="flex-1 flex items-center justify-center flex-col md:flex-row md:justify-start text-center md:text-left">
-        <div className="text-2xl pl-4 font-bold flex items-center hidden md:block">
+        <div className="text-2xl pl-4 font-bold flex items-center hidden md:block cursor-pointer">
           ResolveTech
         </div>
         <div
-          className="pl-4 text-1xl flex items-center font-medium text-purple-600 hidden md:block"
+          className="pl-4 text-1xl flex items-center font-medium text-purple-600 hidden md:block cursor-pointer"
           style={{ fontFamily: "'Poppins', sans-serif" }}
         >
-          Benvenuto, {user?.name || "Utente"}!
+          Benvenuto, {user?.name}!
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <FaBell className="text-gray-500 md:block" />
+      <div className="flex items-center gap-4 cursor-pointer">
         <img
           src={userImage || "https://via.placeholder.com/40"}
           alt="Profile"
@@ -81,22 +80,6 @@ const Header = () => {
           {theme === "light" ? "🌙" : "🌞"}
         </button>
       </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div
-          className={`absolute top-16 left-0 w-full p-4 bg-gray-800 text-white flex flex-col gap-4 md:hidden`}
-        >
-          <div className="flex items-center gap-2">
-            <FaSearch className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="p-2 border rounded-lg bg-gray-700 text-white outline-none w-full"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

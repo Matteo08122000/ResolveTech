@@ -26,7 +26,7 @@ const EditTicketModal = ({ isOpen, onClose, onSubmit, ticket }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(ticket._id, formData); 
+    onSubmit(ticket._id, formData);
   };
 
   if (!isOpen) return null;
@@ -98,13 +98,13 @@ const EditTicketModal = ({ isOpen, onClose, onSubmit, ticket }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+              className="px-4 py-2 bg-[#c82333] rounded-md hover:bg-[#c82333] text-white"
             >
               Annulla
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className="px-4 py-2 bg-blue-500  text-white rounded-md hover:bg-blue-700 "
             >
               Salva
             </button>

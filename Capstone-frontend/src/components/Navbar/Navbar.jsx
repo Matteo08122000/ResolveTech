@@ -36,10 +36,10 @@ const Navbar = () => {
 
         <ul className="hidden md:flex list-none items-center gap-10 ml-10">
           {[
-            { name: "Blogs", to: "blogs" },
-            { name: "Services", to: "services" },
-            { name: "Contact", to: "contacts" },
-            { name: "About", to: "about" },
+            { name: "Blog", to: "blogs" },
+            { name: "Servizi", to: "services" },
+            { name: "Contatti", to: "contacts" },
+            { name: "su di Noi", to: "about" },
           ].map((item, index) => (
             <li key={index}>
               <ScrollLink

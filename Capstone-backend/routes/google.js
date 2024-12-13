@@ -32,9 +32,14 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
-
     (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
+      const user = {
+        id: profile.id,
+        name: profile.displayName,
+        email: profile.emails[0]?.value,
+        picture: profile.photos[0]?.value,
+      };
+      return done(null, user);
     }
   )
 );
@@ -54,18 +59,34 @@ google.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    const user = req.user;
-    const token = jwt.sign(user, process.env.JWT_SECRET);
-    const redirectUrl = `${
-      process.env.FRONTEND_URL
-    }/success/${encodeURIComponent(token)}`;
-    res.redirect(redirectUrl);
+    if (!req.user) {
+      console.error("Utente non trovato dopo il callback di Google");
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=user_not_found`
+      );
+    }
+
+    try {
+      const token = jwt.sign(
+        {
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      const redirectUrl = `${
+        process.env.FRONTEND_URL
+      }/success?token=${encodeURIComponent(token)}`;
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error("Errore durante la generazione del token JWT:", error);
+      res.redirect(`${process.env.FRONTEND_URL}/login?error=token_error`);
+    }
   }
 );
-
-google.get("/success", (req, res) => {
-  res.redirect(`${process.env.FRONTEND_URL}/home`);
-});
 
 google.get("/logout", (req, res) => {
   req.logout((err) => {

@@ -6,11 +6,10 @@ const cors = require("cors");
 const usersRoute = require("./routes/users");
 const ticketsRoute = require("./routes/tickets");
 const departmentsRoute = require("./routes/departments");
-const commentsRoute = require("./routes/comments");
-const logsRoute = require("./routes/logs");
 const loginRoute = require("./routes/login");
 const logoutRoute = require("./routes/logoutAuth");
 const googleRoute = require("./routes/google");
+const sendEmail = require("./routes/sendEmail");
 
 const PORT = 5050;
 
@@ -27,11 +26,10 @@ server.use(
 server.use("/", usersRoute);
 server.use("/", ticketsRoute);
 server.use("/", departmentsRoute);
-server.use("/", commentsRoute);
-server.use("/", logsRoute);
 server.use("/", loginRoute);
 server.use("/", logoutRoute);
 server.use("/", googleRoute);
+server.use("/", sendEmail);
 
 init();
 

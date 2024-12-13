@@ -13,11 +13,16 @@ const DepartmentsSchema = new mongoose.Schema(
       maxlength: 100,
       minlength: 10,
     },
-
     image: {
       type: String,
       required: false,
     },
+    technicians: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usersmodel",
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -1,31 +1,22 @@
 const express = require("express");
 const logoutAuth = express.Router();
 
-logoutAuth.get("/logout", (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(403).send({
-        statusCode: 403,
-        message: "User is not authenticated",
-      });
-    }
+logoutAuth.post("/logout", (req, res) => {
+  const authHeader = req.headers.authorization;
 
-    req.session.destroy((err) => {
-      if (err) {
-        throw new Error("Failed to destroy session");
-      }
-      return res.status(200).send({
-        statusCode: 200,
-        message: "User logged out successfully",
-      });
-    });
-  } catch (error) {
-    return res.status(500).send({
-      statusCode: 500,
-      message: "Internal Server Error",
-      error: error.message,
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).send({
+      statusCode: 401,
+      message: "Token mancante o non valido",
     });
   }
+
+  const token = authHeader.split(" ")[1];
+
+  return res.status(200).send({
+    statusCode: 200,
+    message: "Logout effettuato con successo",
+  });
 });
 
 module.exports = logoutAuth;

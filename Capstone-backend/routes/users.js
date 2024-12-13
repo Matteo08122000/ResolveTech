@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 
 users.use(verifyToken);
 
-users.get("/users", authorizeAdmin, async (req, res) => {
+users.get("/users", async (req, res) => {
   try {
     const users = await Usersmodel.find();
     if (users.length === 0) {
@@ -31,6 +31,26 @@ users.get("/users", authorizeAdmin, async (req, res) => {
   }
 });
 
+users.get("/users/technician", authorizeAdmin, async (req, res) => {
+  try {
+    const technicians = await Usersmodel.find({ role: "technician" }).select(
+      "name email"
+    );
+    res.status(200).send({
+      statusCode: 200,
+      message: "Technicians retrieved successfully",
+      technicians,
+    });
+  } catch (error) {
+    console.error("Error fetching technicians:", error.message);
+    res.status(500).send({
+      statusCode: 500,
+      message: "Error fetching technicians",
+      error: error.message,
+    });
+  }
+});
+
 users.post("/users/create", async (req, res, next) => {
   const { name, email, password, gender, dob } = req.body;
 
@@ -41,27 +61,24 @@ users.post("/users/create", async (req, res, next) => {
     });
   }
 
-  const existingUser = await Usersmodel.findOne({ email });
-  if (existingUser) {
-    return res.status(400).send({
-      statusCode: 400,
-      message: "Email already in use",
-    });
-  }
-
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-  const newUser = new Usersmodel({
-    name: name,
-    email: email,
-    password: hashedPassword,
-    gender: gender || "not specified",
-    dob: dob || null,
-    role: "user", 
-  });
-
   try {
+    const existingUser = await Usersmodel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send({
+        statusCode: 400,
+        message: "Email already in use",
+      });
+    }
+
+    const newUser = new Usersmodel({
+      name,
+      email,
+      password,
+      gender: gender || "not specified",
+      dob: dob || null,
+      role: "user",
+    });
+
     const user = await newUser.save();
     res.status(201).send({
       statusCode: 201,

@@ -1,4 +1,4 @@
-const Ticketsmodel = require("../models/ticketsmodel");
+const Ticketsmodel = require("../models/Ticketsmodel");
 
 const authorizeTicketAcess = async (req, res, next) => {
   const { ticketId } = req.params;

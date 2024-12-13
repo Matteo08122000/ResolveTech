@@ -17,16 +17,17 @@ const cloudStorage = new CloudinaryStorage({
   },
 });
 
-const cloud = multer({ storage: cloudStorage,
-    limits:{fileSize: 10 * 1024 * 1024},
-    fileFilter: (req, res, cb) => {
-        const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
-        if(allowedMimeTypes.includes(file.mimetype)) {
-            cb(null, true);
-        }else {
-            cb(new Error("invalid file type"), false);
-        }
-    },
- });
+const cloud = multer({
+  storage: cloudStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("invalid file type"), false);
+    }
+  },
+});
 
 module.exports = cloud;

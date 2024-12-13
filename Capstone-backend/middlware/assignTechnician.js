@@ -1,4 +1,4 @@
-const Ticketsmodel = require("../models/ticketsmodel");
+const Ticketsmodel = require("../models/Ticketsmodel");
 const Usersmodel = require("../models/Usersmodel");
 
 const assignTechnician = async (req, res, next) => {

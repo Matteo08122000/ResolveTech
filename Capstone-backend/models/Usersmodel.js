@@ -41,6 +41,11 @@ const UsersSchema = new mongoose.Schema(
       default: "user",
       index: true,
     },
+
+    img: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true, strict: true }
 );

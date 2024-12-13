@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setError } from "../store/slice/authSlice";
+import { setLoading, setError, setRedirecting } from "../store/slice/authSlice";
 import { useNavigate, Link } from "react-router-dom";
-import CustomAlert from "../components/CustomAlert/CustomAlert";
+import Spinner from "../components/LoadingSpinner/LoadingSpinner";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const Register = () => {
   });
 
   const { loading, error } = useSelector((state) => state.auth);
+  const redirecting = useSelector((state) => state.auth.redirecting);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [alert, setAlert] = useState(null);
@@ -45,23 +46,34 @@ const Register = () => {
       );
 
       if (response.ok) {
-        showAlert(
-          "Registration successful! Redirecting to login...",
-          "success"
-        );
-        setTimeout(() => navigate("/login"), 2000);
+        <loading />;
+
+        dispatch(setRedirecting(true));
+        setTimeout(() => {
+          navigate("/login");
+          dispatch(setRedirecting(false));
+          dispatch(setLoading(false));
+        }, 1500);
       } else {
         const data = await response.json();
-        showAlert(data.message || "Registration failed", "error");
-        dispatch(setError(data.message || "Registration failed"));
+        showAlert(data.message || "Registrazione fallita", "error");
+        dispatch(setError(data.message || "Registrazione fallita"));
+        dispatch(setLoading(false));
       }
     } catch (err) {
-      showAlert("Network error. Please try again later.", "error");
-      dispatch(setError("Network error. Please try again later."));
-    } finally {
+      showAlert("Errore di rete. Riprova più tardi.", "error");
+      dispatch(setError("Errore di rete. Riprova più tardi."));
       dispatch(setLoading(false));
     }
   };
+
+  if (loading || redirecting) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -156,14 +168,6 @@ const Register = () => {
           </div>
         </div>
       </div>
-
-      {alert && (
-        <CustomAlert
-          message={alert.message}
-          type={alert.type}
-          onClose={() => setAlert(null)}
-        />
-      )}
     </div>
   );
 };

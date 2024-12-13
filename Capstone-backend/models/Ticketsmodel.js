@@ -16,7 +16,7 @@ const TicketsSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      required: true,
+      required: false,
       enum: ["Open", "In progress", "Resolved", "Closed"],
       default: "Open",
       index: true,
@@ -24,7 +24,8 @@ const TicketsSchema = new mongoose.Schema(
 
     priority: {
       type: String,
-      required: true,
+      required: false,
+      default: "Low",
       enum: ["Low", "Medium", "High"],
       index: true,
     },
