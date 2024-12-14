@@ -217,19 +217,19 @@ const TicketsTable = ({ onEdit, userRole }) => {
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-center mt-4">
+      <div className="flex flex-col sm:flex-row items-center justify-center mt-4 space-y-2 sm:space-y-0 sm:space-x-4">
         <button
-          className="px-3 sm:px-4 py-2 bg-purple-600 text-white text-xs sm:text-sm font-medium rounded-md shadow-md hover:bg-purple-700 disabled:bg-gray-300 disabled:text-gray-500 transition-all duration-300"
+          className="px-2 sm:px-4 py-2 bg-purple-600 text-white text-xs sm:text-sm font-medium rounded-md shadow-md hover:bg-purple-700 disabled:bg-gray-300 disabled:text-gray-500 transition-all duration-300 w-full sm:w-auto"
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
         >
           Precedente
         </button>
-        <span className="mx-4 text-black font-semibold text-xs sm:text-sm">
+        <span className="text-black font-semibold text-xs sm:text-sm">
           Pagina {page}
         </span>
         <button
-          className="px-3 sm:px-4 py-2 bg-purple-300 text-white text-xs sm:text-sm font-medium rounded-md shadow-md hover:bg-purple-500 transition-all duration-300"
+          className="px-2 sm:px-4 py-2 bg-purple-300 text-white text-xs sm:text-sm font-medium rounded-md shadow-md hover:bg-purple-500 transition-all duration-300 w-full sm:w-auto"
           onClick={() => setPage((prev) => prev + 1)}
         >
           Successiva
