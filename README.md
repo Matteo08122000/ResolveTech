@@ -97,4 +97,4 @@ Email: teonicolas33@gmail.com
 
 LinkedIn: Matteo D'innocenzo
 
-Grazie per aver visitato il repository del ResolveTech! 🌟
+Grazie per aver visitato il repository del TechResolve! 🌟
