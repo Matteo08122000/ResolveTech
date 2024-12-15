@@ -29,10 +29,13 @@ module.exports = (req, res, next) => {
     req.user = verified;
     next();
   } catch (error) {
+    if (error.message === "jwt expired") {
+      return res.redirect("/login");
+    }
+
     return res.status(403).send({
       statusCode: 403,
-      message:
-        error.message === "jwt expired" ? "Token expired" : "Token not valid",
+      message: "Token not valid",
     });
   }
 };

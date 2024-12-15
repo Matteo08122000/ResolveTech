@@ -1,10 +1,10 @@
 const validateTicketFields = (req, res, next) => {
-  const { title, description, priority, status } = req.body;
+  const { title, description } = req.body;
 
-  if (!title || !description || !priority || !status) {
+  if (!title || !description) {
     return res.status(400).send({
       statusCode: 400,
-      message: "All fields are required",
+      message: "Title and description are required",
     });
   }
 

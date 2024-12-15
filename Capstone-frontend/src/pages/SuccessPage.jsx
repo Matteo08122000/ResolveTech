@@ -36,11 +36,9 @@ const SuccessPage = () => {
         dispatch(setUser({ token, ...user }));
         navigate("/dashboard");
       } else {
-        console.error("Token JWT non valido o dati utente mancanti");
         navigate("/login");
       }
     } else {
-      console.error("Token non valido o assente");
       navigate("/login");
     }
   }, [location, navigate, dispatch]);

@@ -29,10 +29,14 @@ const assignTechnician = async (req, res, next) => {
       });
     }
 
-    if (ticket.assignedTo) {
+    if (
+      ticket.assignedTo &&
+      ticket.assignedTo.toString() !== technician._id.toString()
+    ) {
       return res.status(400).send({
         statusCode: 400,
-        message: "Ticket is already assigned to another technician",
+        message:
+          "Ticket is already assigned. Reassignment requires confirmation.",
       });
     }
 

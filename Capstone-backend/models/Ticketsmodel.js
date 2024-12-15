@@ -38,6 +38,7 @@ const TicketsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "UsersModel",
       required: false,
+      default: null,
     },
     department: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const CreateTicketModal = ({ isOpen, onClose, onSubmit, userRole }) => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,7 @@ const CreateTicketModal = ({ isOpen, onClose, onSubmit, userRole }) => {
     description: "",
     priority: "Low",
     status: "Open",
+    assignedTo: "",
   });
 
   const handleChange = (e) => {
@@ -13,9 +15,48 @@ const CreateTicketModal = ({ isOpen, onClose, onSubmit, userRole }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    const payload = {
+      ...formData,
+      assignedTo: formData.assignedTo || "",
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/tickets/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Errore durante la creazione del ticket");
+      }
+
+      const data = await response.json();
+
+      Swal.fire("Successo", "Ticket creato con successo!", "success");
+
+      setFormData({
+        title: "",
+        description: "",
+        priority: "Low",
+        status: "Open",
+        assignedTo: "",
+      });
+      onClose();
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Errore", "Non è stato possibile creare il ticket", "error");
+    }
   };
 
   if (!isOpen) return null;

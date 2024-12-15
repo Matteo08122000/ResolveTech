@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser, setLoading, setRedirecting } from "../store/slice/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2"; 
 import logo from "../assets/logo.png";
 import Spinner from "../components/LoadingSpinner/LoadingSpinner";
 
@@ -11,7 +12,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState(null);
 
   const loading = useSelector((state) => state.auth.loading);
   const redirecting = useSelector((state) => state.auth.redirecting);
@@ -25,8 +25,12 @@ const LoginPage = () => {
   }
 
   const showAlert = (message, type = "info") => {
-    setAlert({ message, type });
-    setTimeout(() => setAlert(null), 3000);
+    Swal.fire({
+      title: type === "success" ? "Success" : "Error",
+      text: message,
+      icon: type,
+      confirmButtonText: "OK",
+    });
   };
 
   const handleLogin = async () => {
@@ -50,7 +54,7 @@ const LoginPage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+        throw new Error(errorData.message || "Invalid email or password");
       }
 
       const data = await response.json();
@@ -59,14 +63,13 @@ const LoginPage = () => {
       showAlert("Login successful! Redirecting...", "success");
 
       dispatch(setRedirecting(true));
-
       setTimeout(() => {
         navigate("/dashboard");
         dispatch(setRedirecting(false));
       }, 2500);
     } catch (error) {
       console.error("Login Error:", error.message);
-      showAlert(error.message || "Login failed", "error");
+      showAlert(error.message || "Invalid email or password", "error");
     } finally {
       dispatch(setLoading(false));
     }

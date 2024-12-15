@@ -6,7 +6,41 @@ const EditTicketModal = ({ isOpen, onClose, onSubmit, ticket }) => {
     description: "",
     priority: "Low",
     status: "Open",
+    assignedTo: "",
   });
+  const [technicians, setTechnicians] = useState([]);
+
+  useEffect(() => {
+    const fetchTechnicians = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/users/technician`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Errore HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setTechnicians(data.technicians);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchTechnicians();
+  }, []);
+
+  useEffect(() => {}, [technicians]);
 
   useEffect(() => {
     if (ticket) {
@@ -15,6 +49,7 @@ const EditTicketModal = ({ isOpen, onClose, onSubmit, ticket }) => {
         description: ticket.description || "",
         priority: ticket.priority || "Low",
         status: ticket.status || "Open",
+        assignedTo: ticket.assignedTo || "",
       });
     }
   }, [ticket]);
@@ -94,6 +129,24 @@ const EditTicketModal = ({ isOpen, onClose, onSubmit, ticket }) => {
               <option value="Closed">Chiuso</option>
             </select>
           </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Assegna Tecnico
+            </label>
+            <select
+              name="assignedTo"
+              value={formData.assignedTo}
+              onChange={handleChange}
+              className="border p-2 rounded w-full"
+            >
+              <option value="">Seleziona un tecnico</option>
+              {technicians.map((tech) => (
+                <option key={tech._id} value={tech._id}>
+                  {tech.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex justify-end gap-2">
             <button
               type="button"
@@ -104,7 +157,7 @@ const EditTicketModal = ({ isOpen, onClose, onSubmit, ticket }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500  text-white rounded-md hover:bg-blue-700 "
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
             >
               Salva
             </button>

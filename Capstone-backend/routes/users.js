@@ -31,7 +31,7 @@ users.get("/users", async (req, res) => {
   }
 });
 
-users.get("/users/technician", authorizeAdmin, async (req, res) => {
+users.get("/users/technician", verifyToken, async (req, res) => {
   try {
     const technicians = await Usersmodel.find({ role: "technician" }).select(
       "name email"

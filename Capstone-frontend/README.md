@@ -38,7 +38,8 @@ Backend: Nella cartella Capstone-backend.
 
 # Clona il repository sul tuo computer
 
-$ git clone https://github.com/Matteo08122000/TechResolve/branches
+$ git clone https://github.com/Matteo08122000/TechResolve
+
 # Accedi alla directory del progetto
 
 $ cd TechResolve

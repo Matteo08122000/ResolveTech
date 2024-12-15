@@ -60,42 +60,42 @@ tickets.get("/tickets", verifyToken, async (req, res) => {
   }
 });
 
-tickets.post("/tickets/create", validateTicketFields, async (req, res) => {
-  try {
-    const {
-      title,
-      description,
-      status,
-      priority,
-      createdBy,
-      assignedTo,
-      department,
-    } = req.body;
+tickets.post(
+  "/tickets/create",
+  validateTicketFields,
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { title, description, status, priority, assignedTo, department } =
+        req.body;
 
-    const newTicket = await Ticketsmodel({
-      title,
-      description,
-      status,
-      priority,
-      createdBy,
-      assignedTo,
-      department,
-    });
+      const newTicket = new Ticketsmodel({
+        title,
+        description,
+        status,
+        priority,
+        createdBy: req.user._id,
+        assignedTo: assignedTo || null,
+        department: department || null,
+      });
 
-    const ticket = await newTicket.save();
-    res.status(201).send({
-      statusCode: 201,
-      message: "Ticket created successfully",
-      notification: `Un nuovo ticket "${ticket.title}" è stato creato.`,
-      ticket,
-    });
-  } catch (error) {
-    res.status(500).send({
-      statusCode: 500,
-      message: "Internal server error",
-    });
+      const ticket = await newTicket.save();
+
+      res.status(201).send({
+        statusCode: 201,
+        message: "Ticket creato con successo",
+        ticket,
+      });
+    } catch (error) {
+      res.status(500).send({
+        statusCode: 500,
+        message: "Errore interno del server",
+        error: error.message,
+      });
+    }
   }
-});
+);
+
 tickets.get("/tickets/assigned-to/:userId", verifyToken, async (req, res) => {
   try {
     const { userId } = req.params;
@@ -125,10 +125,10 @@ tickets.get("/tickets/assigned-to/:userId", verifyToken, async (req, res) => {
       tickets,
     });
   } catch (error) {
-    console.error("Error fetching tickets:", error);
     res.status(500).send({
       statusCode: 500,
       message: "Internal server error",
+      error,
     });
   }
 });
@@ -171,6 +171,53 @@ tickets.patch(
       res.status(500).send({
         statusCode: 500,
         message: "Internal server error",
+      });
+    }
+  }
+);
+
+tickets.patch(
+  "/tickets/assign/:ticketId",
+  verifyToken,
+  restrictFieldsForUser,
+  async (req, res) => {
+    try {
+      const { ticketId } = req.params;
+      const { assignedTo } = req.body;
+
+      if (!assignedTo) {
+        return res.status(400).send({
+          statusCode: 400,
+          message: "Technician ID is required",
+        });
+      }
+
+      const updatedTicket = await Ticketsmodel.findByIdAndUpdate(
+        ticketId,
+        { assignedTo },
+        { new: true }
+      )
+        .populate("createdBy", "name email")
+        .populate("assignedTo", "name email")
+        .populate("department", "name");
+
+      if (!updatedTicket) {
+        return res.status(404).send({
+          statusCode: 404,
+          message: "Ticket not found",
+        });
+      }
+
+      res.status(200).send({
+        statusCode: 200,
+        message: "Technician assigned successfully",
+        updatedTicket,
+      });
+    } catch (error) {
+      res.status(500).send({
+        statusCode: 500,
+        message: "Internal server error",
+        error,
       });
     }
   }
