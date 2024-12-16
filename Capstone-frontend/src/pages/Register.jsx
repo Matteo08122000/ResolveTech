@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setError, setRedirecting } from "../store/slice/authSlice";
 import { useNavigate, Link } from "react-router-dom";
@@ -46,21 +47,42 @@ const Register = () => {
       );
 
       if (response.ok) {
-        <loading />;
-
         dispatch(setRedirecting(true));
+
+        Swal.fire({
+          title: "Utente Creato!",
+          text: "La registrazione è avvenuta con successo. Ora verrai reindirizzato al login.",
+          icon: "success",
+          timer: 5000,
+          showConfirmButton: false,
+        });
+
         setTimeout(() => {
           navigate("/login");
           dispatch(setRedirecting(false));
           dispatch(setLoading(false));
-        }, 1500);
+        }, 2000);
       } else {
         const data = await response.json();
+        Swal.fire({
+          title: "Errore",
+          text: data.message || "Registrazione fallita",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+
         showAlert(data.message || "Registrazione fallita", "error");
         dispatch(setError(data.message || "Registrazione fallita"));
         dispatch(setLoading(false));
       }
     } catch (err) {
+      Swal.fire({
+        title: "Errore di Rete",
+        text: "Errore di rete. Riprova più tardi.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+
       showAlert("Errore di rete. Riprova più tardi.", "error");
       dispatch(setError("Errore di rete. Riprova più tardi."));
       dispatch(setLoading(false));

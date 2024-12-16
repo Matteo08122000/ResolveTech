@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header/Header";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Spinner from "../components/LoadingSpinner/LoadingSpinner";
+import Swal from "sweetalert2";
 
 const SendEmailForm = () => {
   const [formData, setFormData] = useState({
@@ -10,8 +11,24 @@ const SendEmailForm = () => {
     message: "",
   });
 
-  const [statusMessage, setStatusMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
+  const resetForm = () => {
+    setFormData({
+      ticketId: "",
+      senderEmail: "",
+      message: "",
+    });
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsPageLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,44 +37,67 @@ const SendEmailForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatusMessage("");
     setLoading(true);
 
-    setTimeout(async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setStatusMessage("Error: User not authenticated.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/sendEmail`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(formData),
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          setStatusMessage(`Error: ${errorData.message}`);
-        } else {
-          const data = await response.json();
-          setStatusMessage(`Success: ${data.message}`);
-        }
-      } catch (error) {
-        setStatusMessage("Error: Unable to send email.");
-      } finally {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
         setLoading(false);
+        Swal.fire({
+          icon: "error",
+          title: "Authentication Error",
+          text: "User not authenticated. Please log in again.",
+        });
+        return;
       }
-    }, 300);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/sendEmail`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: errorData.message || "Something went wrong. Please try again.",
+        });
+      } else {
+        const data = await response.json();
+        Swal.fire({
+          icon: "success",
+          title: "Email Sent",
+          text: data.message || "Your email has been sent successfully!",
+        }).then(() => {
+          resetForm();
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Unable to send email. Please check your connection and try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (isPageLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -144,17 +184,6 @@ const SendEmailForm = () => {
                 Send Email
               </button>
             </form>
-            {statusMessage && (
-              <p
-                className={`mt-4 text-center text-sm font-medium ${
-                  statusMessage.startsWith("Success")
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {statusMessage}
-              </p>
-            )}
           </div>
         </div>
       </div>

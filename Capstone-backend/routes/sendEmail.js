@@ -51,7 +51,11 @@ sendEmail.post("/sendEmail", async (req, res) => {
       });
     }
 
-    if (user.role !== "admin" && user.role !== "technician") {
+    if (
+      user.role !== "admin" &&
+      user.role !== "technician" &&
+      user.role !== "user"
+    ) {
       return res.status(403).send({
         statusCode: 403,
         message: "You do not have permission to respond to this ticket",
