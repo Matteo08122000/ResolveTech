@@ -1,4 +1,4 @@
-ResolveTech Web App 🚀
+TechResolve Web App 🚀
 
 Benvenuti nel repository del TechResolve Web App!  Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) 
 
