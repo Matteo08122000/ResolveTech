@@ -93,6 +93,6 @@ Per qualsiasi domanda, contattami:
 
 Email: teonicolas33@gmail.com
 
-LinkedIn: Matteo D'innocenzo
+LinkedIn: https://www.linkedin.com/in/matteo-d%E2%80%99innocenzo-04871b261/
 
 Grazie per aver visitato il repository del TechResolve! 🌟
