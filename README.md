@@ -1,8 +1,6 @@
 ResolveTech Web App 🚀
 
-Benvenuti nel repository del ResolveTech Web App! 🎉 Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) durante il corso di formazione con Epicode.
-
-📝 Descrizione
+Benvenuti nel repository del TechResolve Web App!  Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) 
 
 Questa web app è progettata per la gestione di ticket e include funzionalità come:
 
@@ -38,7 +36,7 @@ Backend: Nella cartella Capstone-backend.
 
 # Clona il repository sul tuo computer
 
-$ git clone https://github.com/Matteo08122000/TechResolve/branches
+$ git clone https://github.com/Matteo08122000/TechResolve
 
 # Accedi alla directory del progetto
 
@@ -73,7 +71,7 @@ Avvia il frontend:
 
 $ npm run dev
 
-4. Apri l'app nel browser 🌐
+4. Apri l'app nel browser 
 
 Visita http://localhost:5173 per il frontend.
 
