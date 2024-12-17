@@ -1,8 +1,6 @@
-ResolveTech Web App 🚀
+TechResolve Web App 🚀
 
-Benvenuti nel repository del ResolveTech Web App! 🎉 Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) durante il corso di formazione con Epicode.
-
-📝 Descrizione
+Benvenuti nel repository del TechResolve Web App!  Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) 
 
 Questa web app è progettata per la gestione di ticket e include funzionalità come:
 
@@ -54,14 +52,6 @@ Installa le dipendenze:
 
 $ npm install
 
-Crea un file .env con le seguenti variabili:
-
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-PORT=
-SMTP_HOST=your_smtp_host
-SMTP_USER=your_smtp_user
-SMTP_PASS=your_smtp_password
 
 Avvia il backend:
 
@@ -81,7 +71,7 @@ Avvia il frontend:
 
 $ npm run dev
 
-4. Apri l'app nel browser 🌐
+4. Apri l'app nel browser 
 
 Visita http://localhost:5173 per il frontend.
 
@@ -103,6 +93,6 @@ Per qualsiasi domanda, contattami:
 
 Email: teonicolas33@gmail.com
 
-LinkedIn: Matteo D'innocenzo
+LinkedIn: https://www.linkedin.com/in/matteo-d%E2%80%99innocenzo-04871b261/
 
-Grazie per aver visitato il repository del ResolveTech! 🌟
+Grazie per aver visitato il repository del TechResolve! 🌟
