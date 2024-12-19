@@ -1,6 +1,6 @@
-TechResolve Web App 🚀
+ResolveTech Web App 🚀
 
-Benvenuti nel repository del TechResolve Web App!  Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) 
+Benvenuti nel repository del ResolveTech Web App!  Questo progetto è stato realizzato utilizzando lo stack MERN (MongoDB, Express, React, Node.js) 
 
 Questa web app è progettata per la gestione di ticket e include funzionalità come:
 
@@ -95,4 +95,4 @@ Email: teonicolas33@gmail.com
 
 LinkedIn: https://www.linkedin.com/in/matteo-d%E2%80%99innocenzo-04871b261/
 
-Grazie per aver visitato il repository del TechResolve! 🌟
+Grazie per aver visitato il repository del ResolveTech! 🌟
